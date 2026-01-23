@@ -28,79 +28,86 @@ $loans = $conn->query("
 closeConnection($conn);
 ?>
 
-<div class="min-h-screen bg-gray-50">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
 <!-- HEADER -->
-<div class="mb-6">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Peminjaman Saya</h2>
-    <p class="text-sm sm:text-base text-gray-600">Riwayat peminjaman buku Anda</p>
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div>
+        <h2 class="text-3xl font-bold text-gray-900">Peminjaman Saya</h2>
+        <p class="text-sm text-gray-600 mt-1">Riwayat peminjaman buku yang pernah Anda lakukan</p>
+    </div>
 </div>
 
 <!-- FILTER -->
-<div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-<form method="GET" class="flex flex-col sm:flex-row gap-2">
-    <select name="status" class="px-4 py-2.5 border border-gray-300 rounded-lg">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+<form method="GET" class="flex flex-col sm:flex-row gap-3">
+    <select name="status"
+        class="w-full sm:w-56 px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         <option value="">Semua Status</option>
         <option value="dipinjam" <?= $status_filter == 'dipinjam' ? 'selected' : ''; ?>>Dipinjam</option>
         <option value="dikembalikan" <?= $status_filter == 'dikembalikan' ? 'selected' : ''; ?>>Dikembalikan</option>
         <option value="terlambat" <?= $status_filter == 'terlambat' ? 'selected' : ''; ?>>Terlambat</option>
     </select>
 
-    <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm">
-        <i class="fas fa-filter mr-1"></i> Filter
+    <button
+        class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition">
+        <i class="fas fa-filter"></i> Filter
     </button>
 
     <?php if ($status_filter): ?>
     <a href="peminjaman_saya.php"
-       class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2.5 rounded-lg text-sm text-center">
-        Reset
+       class="inline-flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition">
+        <i class="fas fa-rotate-left"></i> Reset
     </a>
     <?php endif; ?>
 </form>
 </div>
 
 <!-- TABLE -->
-<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
 <div class="overflow-x-auto">
-<table class="w-full text-sm">
-<thead class="bg-gray-50 border-b border-gray-200">
+<table class="min-w-full text-sm">
+<thead class="bg-gray-50 border-b">
 <tr>
-    <th class="px-4 py-3 text-left font-semibold text-gray-700">Buku</th>
-    <th class="px-4 py-3 hidden md:table-cell font-semibold text-gray-700">Kategori</th>
-    <th class="px-4 py-3 hidden md:table-cell font-semibold text-gray-700">Tgl Pinjam</th>
-    <th class="px-4 py-3 hidden md:table-cell font-semibold text-gray-700">Tgl Kembali</th>
-    <th class="px-4 py-3 font-semibold text-gray-700">Status</th>
-    <th class="px-4 py-3 hidden lg:table-cell font-semibold text-gray-700">Denda</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Buku</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Kategori</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Pinjam</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Kembali</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Status</th>
+    <th class="px-5 py-3 text-left  font-semibold text-gray-700">Denda</th>
 </tr>
 </thead>
 
-<tbody class="divide-y divide-gray-100">
+<tbody class="divide-y">
 <?php if ($loans): foreach ($loans as $l): ?>
 <tr class="hover:bg-gray-50 transition">
-
-<td class="px-4 py-3">
-    <div class="font-medium text-gray-900"><?= htmlspecialchars($l['judul_buku']); ?></div>
-    <div class="text-xs text-gray-500"><?= htmlspecialchars($l['kode_buku']); ?></div>
-    <div class="text-xs text-gray-500 md:hidden mt-1">
-        <?= date('d/m/Y', strtotime($l['tanggal_pinjam'])); ?> -
-        <?= date('d/m/Y', strtotime($l['tanggal_kembali'])); ?>
+<td class="px-5 py-4">
+    <div class="font-semibold text-gray-900">
+        <?= htmlspecialchars($l['judul_buku']); ?>
     </div>
+    <div class="text-xs text-gray-500">
+        <?= htmlspecialchars($l['kode_buku']); ?>
+    </div>
+
+
 </td>
 
-<td class="px-4 py-3 hidden md:table-cell">
-    <?= htmlspecialchars($l['nama_kategori'] ?? 'Umum'); ?>
+<td class="px-5 py-4 ">
+    <span class="px-2 py-1 rounded-md bg-gray-100 text-gray-700 text-xs">
+        <?= htmlspecialchars($l['nama_kategori'] ?? 'Umum'); ?>
+    </span>
 </td>
 
-<td class="px-4 py-3 hidden md:table-cell">
+<td class="px-5 py-4 ">
     <?= date('d/m/Y', strtotime($l['tanggal_pinjam'])); ?>
 </td>
 
-<td class="px-4 py-3 hidden md:table-cell">
+<td class="px-5 py-4 ">
     <?= date('d/m/Y', strtotime($l['tanggal_kembali'])); ?>
 </td>
 
-<td class="px-4 py-3">
+<td class="px-5 py-4">
 <?php
 $status_cfg = [
     'dipinjam' => ['bg'=>'bg-blue-100','text'=>'text-blue-700','label'=>'Dipinjam'],
@@ -109,37 +116,36 @@ $status_cfg = [
 ];
 $s = $status_cfg[$l['status']];
 ?>
-<span class="inline-flex px-2 py-1 rounded-md text-xs font-semibold <?= $s['bg'].' '.$s['text']; ?>">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?= $s['bg'].' '.$s['text']; ?>">
     <?= $s['label']; ?>
 </span>
 
 <?php if ($l['status'] == 'dipinjam' && $l['hari_terlambat'] > 0): ?>
-<div class="text-red-600 text-xs mt-1">
-    Terlambat <?= $l['hari_terlambat']; ?> hari
+<div class="mt-1 text-xs text-red-600 font-medium">
+    ⚠ Terlambat <?= $l['hari_terlambat']; ?> hari
 </div>
 <?php endif; ?>
 </td>
 
-<td class="px-4 py-3 hidden lg:table-cell">
+<td class="px-5 py-4 hidden">
 <?php if ($l['denda'] > 0): ?>
 <span class="font-semibold text-red-600">
-Rp <?= number_format($l['denda'],0,',','.'); ?>
+    Rp <?= number_format($l['denda'],0,',','.'); ?>
 </span>
 <?php else: ?>
 <span class="text-gray-400">-</span>
 <?php endif; ?>
 </td>
-
 </tr>
 <?php endforeach; else: ?>
 <tr>
-<td colspan="6" class="px-4 py-12 text-center">
-    <div class="flex flex-col items-center text-gray-400">
-        <i class="fas fa-book-open text-5xl mb-3"></i>
-        <p class="text-sm">Belum ada riwayat peminjaman</p>
+<td colspan="6" class="px-6 py-16 text-center">
+    <div class="flex flex-col items-center">
+        <i class="fas fa-book-open text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-sm mb-4">Belum ada riwayat peminjaman buku</p>
         <a href="buku.php"
-           class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm">
-            <i class="fas fa-book mr-1"></i> Lihat Katalog
+           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition">
+            <i class="fas fa-book"></i> Lihat Katalog
         </a>
     </div>
 </td>
